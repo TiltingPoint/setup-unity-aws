@@ -108,7 +108,8 @@ async function installUnityModules(unityHubPath, unityVersion, unityModules, uni
 
 async function postInstall() {
     if (process.platform === 'darwin') {
-        await execute('mkdir -p "/Library/Application Support/Unity"');
+        await execute('sudo mkdir -p "/Library/Application Support/Unity"');
+        await execute(`sudo chown -R ${process.env.USER} "/Library/Application Support/Unity"`);
     }
 }
 
