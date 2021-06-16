@@ -23,7 +23,7 @@ async function run() {
         if (unityModules.length > 0) {
             await installUnityModules(unityHubPath, unityVersion, unityModules, unityModulesChild);
         }
-        await postInstall();
+        await postInstall(unityVersion);
 
         core.setOutput('unity-version', unityVersion);
         core.setOutput('unity-path', unityPath);
@@ -106,10 +106,11 @@ async function installUnityModules(unityHubPath, unityVersion, unityModules, uni
     }
 }
 
-async function postInstall() {
+async function postInstall(unityVersion) {
     if (process.platform === 'darwin') {
         await execute('sudo mkdir -p "/Library/Application Support/Unity"');
         await execute(`sudo chown -R ${process.env.USER} "/Library/Application Support/Unity"`);
+        await execute(`sudo chown -R ${process.env.USER} "/Applications/Unity/Hub/Editor/${unityVersion}"`);
     }
 }
 
