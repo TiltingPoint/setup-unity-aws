@@ -108,7 +108,8 @@ async function installUnityModules(unityHubPath, unityVersion, unityModules, uni
 
 async function postInstall() {
     if (process.platform === 'darwin') {
-        await execute('mkdir -p "/Library/Application Support/Unity"');
+        await execute('sudo mkdir -p "/Library/Application Support/Unity"');
+        await execute(`sudo chown -R ${process.env.USER} "/Library/Application Support/Unity"`);
     }
 }
 
@@ -173,7 +174,7 @@ async function executeHub(unityHubPath, args) {
     if (process.platform === 'linux') {
         return await execute(`xvfb-run --auto-servernum "${unityHubPath}" --headless ${args}`);
     } else if (process.platform === 'darwin') {
-        return await execute(`"${unityHubPath}" -- --headless ${args}`);
+        return await execute(`sudo "${unityHubPath}" -- --headless ${args}`);
     } else if (process.platform === 'win32') {
         // unityhub always return exit code 1
         return await execute(`"${unityHubPath}" -- --headless ${args}`, true);
